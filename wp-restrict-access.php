@@ -21,17 +21,43 @@ class iLab_WP_Restrict_Access
         if (!is_user_logged_in()) :
         ?>
         <script>
-            window.addEventListener('load', function(){
+            function checkRestrictAccess()
+            {
                 const elements = document.getElementsByClassName('clinic_detail');
                 for (let i = 0; i < elements.length; i++) 
                 {
-                    const anchor = elements[i].querySelector('a');
-                    if (anchor) 
+                    const anchors = elements[i].querySelectorAll('a');
+                    for (let j = 0; j < anchors.length; j++) 
                     {
-                        anchor.href = 'javascript:;';
+                        const anchor = anchors[j];
+                        if (anchor) 
+                        {
+                            anchor.href = 'javascript:;';
+                            anchor.addEventListener('click', function(){
+                                console.log('anchor clicked');
+                                openElementorPopup(4847);
+                            })
+                        }   
                     }
                 }
+            }
+            window.addEventListener('load', function(){
+                checkRestrictAccess();
             });
+
+            window.addEventListener('scroll', function(){
+                checkRestrictAccess();
+            });
+
+            function openElementorPopup(popupId) 
+            {
+                if (typeof elementorProFrontend !== "undefined" && typeof elementorProFrontend.modules.popup !== "undefined") {
+                    console.log('elementor pro found');
+                    elementorProFrontend.modules.popup.showPopup({ id: popupId });
+                } else {
+                    console.log("Elementor Popup module not found.");
+                }
+            }
         </script>
         <?php
         endif;
